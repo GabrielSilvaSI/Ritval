@@ -8,7 +8,9 @@ public class Player : MonoBehaviour
     public LayerMask IsGround;
     public float Speed;
     public float JumpForce;
+    public GameObject DeadEffect;
 
+    private Player PlayerScript;
     private SpriteRenderer Sprender;
     private Animator Anim;
     private Rigidbody2D Rig;
@@ -21,6 +23,7 @@ public class Player : MonoBehaviour
         Rig = GetComponent<Rigidbody2D>();
         Anim = GetComponent<Animator>();
         Sprender = GetComponent<SpriteRenderer>();
+        PlayerScript = GetComponent<Player>();
     }
     void Update()
     {
@@ -55,10 +58,10 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision){
         Anim.SetBool("jump", false);
-        /*if (collision.gameObject.tag == "DeadObject")
+        if (collision.gameObject.tag == "DeadObject")
         {
             PlayerDead();
-        }*/
+        }
     }
 
     void RevertGravity(){
@@ -74,5 +77,13 @@ public class Player : MonoBehaviour
             }
             top =!top;
         }
+    }
+
+    void PlayerDead(){
+        Sprender.enabled = false;
+        DeadEffect.SetActive(true);
+        DeadEffect.GetComponent<Animator>().SetTrigger("magic");
+        PlayerScript.enabled = false;
+        //UiController.Instace.Invoke("MenuDead", 1);
     }
 }
