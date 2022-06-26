@@ -84,6 +84,6 @@ public class Player : MonoBehaviour
         DeadEffect.SetActive(true);
         DeadEffect.GetComponent<Animator>().SetTrigger("magic");
         PlayerScript.enabled = false;
-        //UiController.Instace.Invoke("MenuDead", 1);
+        GameController.Instance.Invoke("ShowMenuDeath", 1.5f);
     }
 }

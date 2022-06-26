@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     public GameObject World;
     public GameObject UnderWorld;
     public GameObject Camera;
+    public GameObject DeathMenu;
 
     private bool revert;
     private Camera Cam;
+    
+    public static GameController Instance;
 
     void Start()
     {
         revert = false;
         Cam = Camera.GetComponent<Camera>();
+        Instance = this;
     }
 
     void Update()
@@ -35,6 +40,17 @@ public class GameController : MonoBehaviour
             }
             revert = !revert;
         }
+    }
+
+    public void ShowMenuDeath(){
+        DeathMenu.SetActive(true);
+    }
+
+    public void QuitGame(){
+        SceneManager.LoadScene("Menu");
+    }
+    public void RestartLevel(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     
