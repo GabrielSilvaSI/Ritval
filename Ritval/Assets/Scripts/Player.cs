@@ -9,11 +9,15 @@ public class Player : MonoBehaviour
     public float Speed;
     public float JumpForce;
     public GameObject DeadEffect;
+    public AudioClip GroundJump;
+    public AudioClip Revert;
+    public AudioClip Loose;
 
     private Player PlayerScript;
     private SpriteRenderer Sprender;
     private Animator Anim;
     private Rigidbody2D Rig;
+    private AudioSource Sound;
     private bool top;
     private bool OnGround; 
     
@@ -24,6 +28,7 @@ public class Player : MonoBehaviour
         Anim = GetComponent<Animator>();
         Sprender = GetComponent<SpriteRenderer>();
         PlayerScript = GetComponent<Player>();
+        Sound = GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -61,11 +66,20 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "DeadObject")
         {
             PlayerDead();
+        }else{
+           Sound.PlayOneShot(GroundJump, 1);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider) {
+        if(collider.gameObject.tag == "DeadObject"){
+            PlayerDead();
         }
     }
 
     void RevertGravity(){
         if(Input.GetButtonDown("Jump")){
+            Sound.PlayOneShot(Revert, 1);
             Rig.gravityScale *= -1;
             Anim.SetBool("jump", true);
             if(!top){
@@ -80,7 +94,9 @@ public class Player : MonoBehaviour
     }
 
     void PlayerDead(){
+        Sound.PlayOneShot(Loose, 1);
         Sprender.enabled = false;
+        transform.eulerAngles = Vector3.zero;
         DeadEffect.SetActive(true);
         DeadEffect.GetComponent<Animator>().SetTrigger("magic");
         PlayerScript.enabled = false;
